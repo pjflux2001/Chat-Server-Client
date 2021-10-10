@@ -12,9 +12,16 @@ const Chat = ({location}) => {
     useEffect(() => {
         const {name, room} = queryString.parse(location.search)
         socket = io('http://localhost:5000/')
+        
         setName(name);
         setRoom(room);
-        console.log(socket)
+        
+        socket.emit('join', {name, room})
+
+        return () => {
+            socket.emit('disconnect');
+            socket.off();
+        }
     },[location.search])
     return (
         <h1>
